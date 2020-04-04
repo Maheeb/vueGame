@@ -56,7 +56,9 @@
             <section class="row log" v-if="turns.length>0">
                 <div class="small-12 columns">
                     <ul>
-                        <li v-for="turn in turns">
+                        <li v-for="turn in turns"
+                        :class="{'player-turn':turn.isPlayer, 'monster-turn': !turn.isPlayer}"
+                        >
                             {{turn.text}}
                         </li>
                     </ul>
@@ -83,6 +85,7 @@
                 this.gameisRunning = true;
                 this.playerHealth = 100;
                 this.monsterHealth = 100;
+                this.turns=[];
             },
 
             attack : function () {
@@ -147,6 +150,13 @@
 
                     this.playerHealth=100;
                 }
+
+                this.turns.unshift({
+
+                    isPlayer: true,
+                    text: 'Maheeb heals for 10 '
+
+                });
 
                 this.monsterAttack();
 
