@@ -47,10 +47,10 @@
             </section>
             <section class="row controls" v-else>
                 <div class="small-12 columns">
-                    <button id="attack">ATTACK</button>
-                    <button id="special-attack">SPECIAL ATTACK</button>
-                    <button id="heal">HEAL</button>
-                    <button id="give-up">GIVE UP</button>
+                    <button id="attack" v-on:click="attack" >ATTACK</button>
+                    <button id="special-attack" v-on:click="specialAttack">SPECIAL ATTACK</button>
+                    <button id="heal" v-on:click="heal">HEAL</button>
+                    <button id="give-up" v-on:click="giveUp">GIVE UP</button>
                 </div>
             </section>
             <section class="row log">
@@ -76,12 +76,87 @@
             gameisRunning: false
         },
 
+
         methods:{
             startGame: function () {
                 this.gameisRunning = true;
                 this.playerHealth = 100;
                 this.monsterHealth = 100;
+            },
+
+            attack : function () {
+
+                this.monsterHealth -= this.checkDamage(3,10);
+
+                if(this.checkWin()){
+
+                    return
+                }
+
+             this.monsterAttack();
+
+
+            },
+            specialAttack: function () {
+                this.monsterHealth -= this.checkDamage(10,20);
+
+                if(this.checkWin()){
+
+                }
+
+                this.monsterAttack();
+
+            },
+
+            monsterAttack: function(){
+
+                this.playerHealth -= this.checkDamage(5,12);
+
+                this.checkWin();
+            },
+
+
+            heal:function () {
+                
+            },
+            giveUp: function () {
+                
+            },
+
+            checkDamage: function (min,max) {
+              return Math.max(Math.floor(Math.random() * max )+1, min);
+
+            },
+
+            checkWin: function () {
+                if (this.monsterHealth <=0){
+                  if(confirm("YaaY !! Maheeb won , Wanna play again?")){
+
+                      this.startGame();
+                  }else{
+
+                      this.gameisRunning =false;
+                  }
+                    return true;
+                }
+
+                if (this.playerHealth <=0){
+                    if(confirm("You looser , Wanna play again?")){
+
+                        this.startGame();
+                    }else{
+
+                        this.gameisRunning =false;
+                    }
+                    return true;
+
+                }
+
+                return false;
+
+
             }
+
 
         }
 
