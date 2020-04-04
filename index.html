@@ -53,11 +53,11 @@
                     <button id="give-up" v-on:click="giveUp">GIVE UP</button>
                 </div>
             </section>
-            <section class="row log">
+            <section class="row log" v-if="turns.length>0">
                 <div class="small-12 columns">
                     <ul>
-                        <li>
-
+                        <li v-for="turn in turns">
+                            {{turn.text}}
                         </li>
                     </ul>
                 </div>
@@ -73,7 +73,8 @@
         data:{
             playerHealth:100,
             monsterHealth:100,
-            gameisRunning: false
+            gameisRunning: false,
+            turns:[],
         },
 
 
@@ -86,7 +87,14 @@
 
             attack : function () {
 
-                this.monsterHealth -= this.checkDamage(3,10);
+                var damage =  this.checkDamage(3,10);
+                this.monsterHealth -= damage;
+                this.turns.unshift({
+
+                    isPlayer: true,
+                    text: 'Maheeb hits Dipjol for ' + damage
+
+                });
 
                 if(this.checkWin()){
 
@@ -98,10 +106,18 @@
 
             },
             specialAttack: function () {
-                this.monsterHealth -= this.checkDamage(10,20);
+                var damage =this.checkDamage(10,20);
+                this.monsterHealth -= damage;
+                this.turns.unshift({
+
+                    isPlayer: true,
+                    text: 'Maheeb hits Dipjol for ' + damage
+
+                })
 
                 if(this.checkWin()){
 
+                    return;
                 }
 
                 this.monsterAttack();
@@ -110,17 +126,34 @@
 
             monsterAttack: function(){
 
-                this.playerHealth -= this.checkDamage(5,12);
+                var damage = this.checkDamage(5,12);
+                this.playerHealth -= damage;
+
+                this.turns.unshift({
+                   isPlayer: false,
+                   text:  'Dijol hits Maheeb for ' + damage
+                });
 
                 this.checkWin();
             },
 
-
             heal:function () {
-                
+
+                if(this.playerHealth <=90){
+
+                    this.playerHealth +=10;
+
+                }else{
+
+                    this.playerHealth=100;
+                }
+
+                this.monsterAttack();
+
+
             },
             giveUp: function () {
-                
+                this.gameisRunning = false;
             },
 
             checkDamage: function (min,max) {
